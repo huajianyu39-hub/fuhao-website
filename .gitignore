@@ -1,0 +1,15 @@
+# 构建与临时产物
+*.zip
+*.pdf
+.tmp-*/
+work/
+fuhao-cleanup/
+node_modules/
+
+# 内部资料（含站点安全审计，不放入公开仓库）
+docs/
+FUHAO_WEBSITE_REQUIREMENTS.md
+
+# 系统文件
+.DS_Store
+Thumbs.db
