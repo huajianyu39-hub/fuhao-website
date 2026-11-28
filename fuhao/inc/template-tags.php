@@ -16,20 +16,15 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function fuhao_defaults() {
 	return array(
-		'brand_name'      => '豪富箱包',
+		'brand_name'      => '富豪箱包',
 		'brand_tagline'   => 'FUHAO · 箱包制造',
 
 		'1688_store'      => '',
 		'wechat_qr'       => '',
 
-		'hero_eyebrow'   => 'FUHAO · 箱包制造',
-		'hero_title'     => '26+ 年箱包制造经验，做好每一只包',
-		'hero_text'      => '上饶市豪富箱包有限公司，专注收纳、背包与旅行包类的生产与定制。工厂拥有 6 个生产厂区，支持现货、现货定制与批量订单。',
-		'hero_btn_text'  => '获取报价',
-		'hero_btn_url'   => '#contact',
-		'hero_btn2_text' => '查看产品',
-		'hero_btn2_url'  => home_url( '/products/' ),
 		'hero_image'     => '',
+		'hero_link'      => '',
+		'hero_alt'       => '',
 		'hero_interval'  => 3,
 
 		'sec_cooperation_eyebrow' => '合作方式',
@@ -46,7 +41,7 @@ function fuhao_defaults() {
 		'sec_contact_eyebrow'     => '联系我们',
 		'sec_contact_title'       => '把需求发给我们，我们会尽快回复',
 
-		'stat1_number'   => '26+',
+		'stat1_number'   => '20+ 年',
 		'stat1_label'    => '工厂箱包制造经验',
 		'stat2_number'   => '6 个',
 		'stat2_label'    => '生产厂区',
@@ -57,9 +52,9 @@ function fuhao_defaults() {
 
 		'about_eyebrow'  => '工厂实力',
 		'about_title'    => '6 个生产厂区，完整箱包产线',
-		'about_text'     => '上饶市豪富箱包有限公司专注箱包产品销售与客户服务；生产由拥有 26+ 年经验的箱包工厂完成。工厂覆盖裁剪、车缝、组装与包装环节，支持现货、现货定制与批量订单。',
+		'about_text'     => '上饶市富豪箱包有限公司专注箱包产品销售与客户服务；生产由拥有 20+ 年经验的箱包工厂完成。工厂覆盖裁剪、车缝、组装与包装环节，支持现货、现货定制与批量订单。',
 		'about_image'    => '',
-		'about_point1'   => '工厂拥有 26+ 年箱包制造经验，6 个生产厂区',
+		'about_point1'   => '工厂拥有 20+ 年箱包制造经验，6 个生产厂区',
 		'about_point2'   => '裁剪、车缝、组装、包装完整产线',
 		'about_point3'   => 'IQC / IPQC / OQC 三道质检',
 		'about_point4'   => '支持现货、现货定制与批量订单',
@@ -82,7 +77,7 @@ function fuhao_defaults() {
 		'contact_hours'   => '',
 		'inquiry_email'   => '19884501223@163.com',
 
-		'footer_desc'     => '上饶市豪富箱包有限公司，专注收纳、背包与旅行包类的生产与定制，支持现货、现货定制与批量订单。',
+		'footer_desc'     => '上饶市富豪箱包有限公司，专注收纳、背包与旅行包类的生产与定制，支持现货、现货定制与批量订单。',
 		'footer_icp'      => '',
 	);
 }
@@ -98,6 +93,24 @@ function fuhao_get( $key ) {
 	$default  = isset( $defaults[ $key ] ) ? $defaults[ $key ] : '';
 
 	return get_theme_mod( 'fuhao_' . $key, $default );
+}
+
+/**
+ * 把媒体库视频附件 ID 转成前台地址。
+ *
+ * @param int $attachment_id 视频附件 ID。
+ * @return string
+ */
+function fuhao_video_url( $attachment_id ) {
+	$attachment_id = absint( $attachment_id );
+
+	if ( ! $attachment_id || ! wp_attachment_is( 'video', $attachment_id ) ) {
+		return '';
+	}
+
+	$url = wp_get_attachment_url( $attachment_id );
+
+	return $url ? $url : '';
 }
 
 /**

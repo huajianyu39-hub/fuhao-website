@@ -12,7 +12,7 @@ while ( have_posts() ) :
 
 	$fuhao_sub = has_excerpt()
 		? get_the_excerpt()
-		: __( '上饶市豪富箱包有限公司，品牌「豪富 / FUHAO」，专注收纳、背包与旅行包类的生产与定制。', 'fuhao' );
+		: __( '上饶市富豪箱包有限公司，专注收纳、背包与旅行包类的生产与定制。', 'fuhao' );
 
 	get_template_part(
 		'template-parts/page-hero',
@@ -42,8 +42,8 @@ while ( have_posts() ) :
 				<div class="split__content">
 					<p class="eyebrow"><?php esc_html_e( '品牌与公司', 'fuhao' ); ?></p>
 					<h2><?php esc_html_e( '把制造经验，变成稳定的产品供应', 'fuhao' ); ?></h2>
-					<p><?php esc_html_e( '上饶市豪富箱包有限公司专注箱包产品销售、客户服务与订单对接。品牌使用「豪富 / FUHAO」，产品以收纳、背包与旅行包类为主。', 'fuhao' ); ?></p>
-					<p><?php esc_html_e( '生产由拥有 26+ 年经验的箱包工厂完成。工厂 6 个生产厂区与完整产线，为现货、现货定制与批量订单提供支持。', 'fuhao' ); ?></p>
+					<p><?php esc_html_e( '上饶市富豪箱包有限公司专注箱包产品销售、客户服务与订单对接，产品以收纳、背包与旅行包类为主。', 'fuhao' ); ?></p>
+					<p><?php esc_html_e( '生产由拥有 20+ 年经验的箱包工厂完成。工厂 6 个生产厂区与完整产线，为现货、现货定制与批量订单提供支持。', 'fuhao' ); ?></p>
 
 					<div class="note-box note-box--inline">
 						<p><?php esc_html_e( '公司是公司，工厂是工厂。成立时间与制造经验分别表述，不把工厂年限写成公司年限。', 'fuhao' ); ?></p>
@@ -134,11 +134,11 @@ while ( have_posts() ) :
 			<div class="company-meta">
 				<div>
 					<span><?php esc_html_e( '公司名称', 'fuhao' ); ?></span>
-					<strong><?php esc_html_e( '上饶市豪富箱包有限公司', 'fuhao' ); ?></strong>
+					<strong><?php esc_html_e( '上饶市富豪箱包有限公司', 'fuhao' ); ?></strong>
 				</div>
 				<div>
-					<span><?php esc_html_e( '品牌', 'fuhao' ); ?></span>
-					<strong><?php esc_html_e( '豪富 / FUHAO', 'fuhao' ); ?></strong>
+					<span><?php esc_html_e( '主营业务', 'fuhao' ); ?></span>
+					<strong><?php esc_html_e( '收纳包 · 背包 · 旅行包', 'fuhao' ); ?></strong>
 				</div>
 				<div>
 					<span><?php esc_html_e( '成立时间', 'fuhao' ); ?></span>

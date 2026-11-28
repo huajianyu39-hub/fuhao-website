@@ -82,6 +82,34 @@ function fuhao_customize_image( $wp_customize, $section, $id, $label, $descripti
 }
 
 /**
+ * 添加视频设置与控制。
+ *
+ * 视频以附件 ID 保存，前台再取 URL；视频留空时继续使用图片。
+ */
+function fuhao_customize_video( $wp_customize, $section, $id, $label, $description = '' ) {
+	$wp_customize->add_setting(
+		$id,
+		array(
+			'default'           => 0,
+			'sanitize_callback' => 'absint',
+		)
+	);
+
+	$wp_customize->add_control(
+		new WP_Customize_Media_Control(
+			$wp_customize,
+			$id,
+			array(
+				'label'       => $label,
+				'section'     => $section,
+				'mime_type'   => 'video',
+				'description' => $description,
+			)
+		)
+	);
+}
+
+/**
  * 注册所有自定义器面板。
  *
  * @param WP_Customize_Manager $wp_customize 自定义器对象。
@@ -90,8 +118,8 @@ function fuhao_customize_register( $wp_customize ) {
 	$wp_customize->add_panel(
 		'fuhao_panel',
 		array(
-			'title'       => __( '豪富主题设置', 'fuhao' ),
-			'description' => __( '公司信息与工厂数据分开填写：公司专注箱包销售与服务，工厂拥有 26+ 年箱包制造经验。', 'fuhao' ),
+			'title'       => __( '富豪主题设置', 'fuhao' ),
+			'description' => __( '公司信息与工厂数据分开填写：公司专注箱包销售与服务，工厂拥有 20+ 年箱包制造经验。', 'fuhao' ),
 			'priority'    => 25,
 		)
 	);
@@ -104,7 +132,7 @@ function fuhao_customize_register( $wp_customize ) {
 			'panel' => 'fuhao_panel',
 		)
 	);
-	fuhao_customize_text( $wp_customize, 'fuhao_brand', 'fuhao_brand_name', '网站品牌名', 'text', 'sanitize_text_field', '显示在页头与页脚，如“豪富箱包”。' );
+	fuhao_customize_text( $wp_customize, 'fuhao_brand', 'fuhao_brand_name', '网站品牌名', 'text', 'sanitize_text_field', '显示在页头与页脚，如“富豪箱包”。' );
 	fuhao_customize_text( $wp_customize, 'fuhao_brand', 'fuhao_brand_tagline', '品牌副标题', 'text', 'sanitize_text_field', '如“FUHAO · 箱包制造”。' );
 
 	/* 产品联系与 1688 */
@@ -137,8 +165,9 @@ function fuhao_customize_register( $wp_customize ) {
 	$wp_customize->add_section(
 		'fuhao_hero',
 		array(
-			'title' => __( '首页主视觉', 'fuhao' ),
-			'panel' => 'fuhao_panel',
+			'title'       => __( '首页主视觉', 'fuhao' ),
+			'description' => __( '每张海报可以是图片、GIF 或视频，标题和按钮请直接做在画面里，主题不再叠加文字。图片建议 1920×1080；视频建议 MP4、5–10 秒、静音、2–5MB。没有图片也没有视频的海报位会自动跳过。', 'fuhao' ),
+			'panel'       => 'fuhao_panel',
 		)
 	);
 	fuhao_customize_text(
@@ -151,27 +180,51 @@ function fuhao_customize_register( $wp_customize ) {
 		'自动轮播的间隔秒数，建议 3–7 秒；鼠标悬停时会暂停。'
 	);
 
-	fuhao_customize_image( $wp_customize, 'fuhao_hero', 'fuhao_hero_image', '海报 1 · 图片', '公司常驻海报。建议尺寸 1920×1080 以上，深色、留白较多的工厂或产品照片效果最好。留空则使用内置深色背景。' );
-	fuhao_customize_text( $wp_customize, 'fuhao_hero', 'fuhao_hero_eyebrow', '海报 1 · 小标签' );
-	fuhao_customize_text( $wp_customize, 'fuhao_hero', 'fuhao_hero_title', '海报 1 · 大标题' );
-	fuhao_customize_text( $wp_customize, 'fuhao_hero', 'fuhao_hero_text', '海报 1 · 说明文字', 'textarea', 'sanitize_textarea_field' );
-	fuhao_customize_text( $wp_customize, 'fuhao_hero', 'fuhao_hero_btn_text', '海报 1 · 按钮文字' );
-	fuhao_customize_text( $wp_customize, 'fuhao_hero', 'fuhao_hero_btn_url', '海报 1 · 按钮链接', 'text', 'fuhao_sanitize_link', '可以是 #contact 这样的页内锚点，也可以是完整网址。' );
-	fuhao_customize_text( $wp_customize, 'fuhao_hero', 'fuhao_hero_btn2_text', '海报 1 · 次按钮文字' );
-	fuhao_customize_text( $wp_customize, 'fuhao_hero', 'fuhao_hero_btn2_url', '海报 1 · 次按钮链接', 'text', 'fuhao_sanitize_link' );
+	$fuhao_hero_slides = array(
+		1 => array( 'fuhao_hero_image', 'fuhao_hero_mobile', 'fuhao_hero_link', 'fuhao_hero_alt', 'fuhao_hero_video', 'fuhao_hero_video_mobile' ),
+		2 => array( 'fuhao_slide2_image', 'fuhao_slide2_mobile', 'fuhao_slide2_link', 'fuhao_slide2_alt', 'fuhao_slide2_video', 'fuhao_slide2_video_mobile' ),
+		3 => array( 'fuhao_slide3_image', 'fuhao_slide3_mobile', 'fuhao_slide3_link', 'fuhao_slide3_alt', 'fuhao_slide3_video', 'fuhao_slide3_video_mobile' ),
+		4 => array( 'fuhao_slide4_image', 'fuhao_slide4_mobile', 'fuhao_slide4_link', 'fuhao_slide4_alt', 'fuhao_slide4_video', 'fuhao_slide4_video_mobile' ),
+		5 => array( 'fuhao_slide5_image', 'fuhao_slide5_mobile', 'fuhao_slide5_link', 'fuhao_slide5_alt', 'fuhao_slide5_video', 'fuhao_slide5_video_mobile' ),
+	);
 
-	for ( $fuhao_slide = 2; $fuhao_slide <= 5; $fuhao_slide++ ) {
-		$fuhao_prefix = 'fuhao_slide' . $fuhao_slide . '_';
-		$fuhao_label  = sprintf( '海报 %d · ', $fuhao_slide );
+	foreach ( $fuhao_hero_slides as $fuhao_slide => $fuhao_fields ) {
+		$fuhao_label = sprintf( '海报 %d · ', $fuhao_slide );
 
-		fuhao_customize_image( $wp_customize, 'fuhao_hero', $fuhao_prefix . 'image', $fuhao_label . '图片', '第 2 张可放当季爆款，按钮链接粘贴对应产品页网址；没有图片的海报位会自动跳过。' );
-		fuhao_customize_text( $wp_customize, 'fuhao_hero', $fuhao_prefix . 'eyebrow', $fuhao_label . '小标签' );
-		fuhao_customize_text( $wp_customize, 'fuhao_hero', $fuhao_prefix . 'title', $fuhao_label . '大标题' );
-		fuhao_customize_text( $wp_customize, 'fuhao_hero', $fuhao_prefix . 'text', $fuhao_label . '说明文字', 'textarea', 'sanitize_textarea_field' );
-		fuhao_customize_text( $wp_customize, 'fuhao_hero', $fuhao_prefix . 'btn_text', $fuhao_label . '按钮文字' );
-		fuhao_customize_text( $wp_customize, 'fuhao_hero', $fuhao_prefix . 'btn_url', $fuhao_label . '按钮链接', 'text', 'fuhao_sanitize_link', '粘贴产品页或任意页面网址；留空则不显示按钮。' );
-		fuhao_customize_text( $wp_customize, 'fuhao_hero', $fuhao_prefix . 'btn2_text', $fuhao_label . '次按钮文字' );
-		fuhao_customize_text( $wp_customize, 'fuhao_hero', $fuhao_prefix . 'btn2_url', $fuhao_label . '次按钮链接', 'text', 'fuhao_sanitize_link' );
+		fuhao_customize_image( $wp_customize, 'fuhao_hero', $fuhao_fields[0], $fuhao_label . '电脑图片 / 视频封面', '整张图直接显示；填了视频时，这张图作为视频封面。建议 1920×1080；GIF 控制在 2MB 内。' );
+		fuhao_customize_image( $wp_customize, 'fuhao_hero', $fuhao_fields[1], $fuhao_label . '手机图片 / 视频封面', '可选。手机竖图或方图（建议 1080×1350）；不填则手机沿用电脑图。' );
+		fuhao_customize_text(
+			$wp_customize,
+			'fuhao_hero',
+			$fuhao_fields[2],
+			$fuhao_label . '点击链接',
+			'text',
+			'fuhao_sanitize_link',
+			'整张海报可点击；可粘贴产品页或任意网址，留空则不可点。'
+		);
+		fuhao_customize_text(
+			$wp_customize,
+			'fuhao_hero',
+			$fuhao_fields[3],
+			$fuhao_label . '图片替代文字',
+			'text',
+			'sanitize_text_field',
+			'用一句话描述图片或视频内容，供搜索引擎和读屏软件使用；可留空。'
+		);
+		fuhao_customize_video(
+			$wp_customize,
+			'fuhao_hero',
+			$fuhao_fields[4],
+			$fuhao_label . '电脑视频（可选）',
+			'建议 MP4（H.264），5–10 秒，静音，2–5MB。留空则显示电脑图片。'
+		);
+		fuhao_customize_video(
+			$wp_customize,
+			'fuhao_hero',
+			$fuhao_fields[5],
+			$fuhao_label . '手机视频（可选）',
+			'可选。建议竖版或方版，5–10 秒，静音，2–5MB；不填则手机沿用电脑视频。'
+		);
 	}
 
 	/* 首页版块标题 */
@@ -231,6 +284,32 @@ function fuhao_customize_register( $wp_customize ) {
 	fuhao_customize_text( $wp_customize, 'fuhao_about', 'fuhao_about_point2', '优势 2' );
 	fuhao_customize_text( $wp_customize, 'fuhao_about', 'fuhao_about_point3', '优势 3' );
 	fuhao_customize_text( $wp_customize, 'fuhao_about', 'fuhao_about_point4', '优势 4' );
+
+	/* 工厂页视频 */
+	$wp_customize->add_section(
+		'fuhao_factory_video',
+		array(
+			'title'       => __( '工厂页视频', 'fuhao' ),
+			'panel'       => 'fuhao_panel',
+			'description' => __( '只显示在“工厂实力”页面；视频留空则整段隐藏，不影响现有版面。', 'fuhao' ),
+		)
+	);
+	fuhao_customize_video(
+		$wp_customize,
+		'fuhao_factory_video',
+		'fuhao_factory_video',
+		'工厂视频',
+		'建议 MP4（H.264），30–60 秒，720p，10–20MB；点击播放，不自动播放声音。'
+	);
+	fuhao_customize_image(
+		$wp_customize,
+		'fuhao_factory_video',
+		'fuhao_factory_video_poster',
+		'视频封面',
+		'建议 1920×1080；不填则视频显示第一帧。'
+	);
+	fuhao_customize_text( $wp_customize, 'fuhao_factory_video', 'fuhao_factory_video_title', '视频标题' );
+	fuhao_customize_text( $wp_customize, 'fuhao_factory_video', 'fuhao_factory_video_text', '视频说明', 'textarea', 'sanitize_textarea_field' );
 
 	/* OEM / ODM */
 	$wp_customize->add_section(

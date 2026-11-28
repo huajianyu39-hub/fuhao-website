@@ -28,6 +28,7 @@ function fuhao_register_post_types() {
 				'not_found'     => __( '暂无产品', 'fuhao' ),
 				'menu_name'     => __( '产品', 'fuhao' ),
 			),
+			'description'  => '上饶市富豪箱包有限公司产品中心，展示收纳包、背包、旅行包等箱包产品与定制方案，支持现货、现货定制与批量订单。',
 			'public'       => true,
 			'menu_icon'    => 'dashicons-products',
 			'menu_position' => 20,

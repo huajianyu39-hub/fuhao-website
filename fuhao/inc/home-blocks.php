@@ -81,6 +81,19 @@ function fuhao_register_block_meta() {
 			)
 		);
 	}
+
+	register_post_meta(
+		'fuhao_block',
+		'_fuhao_block_video',
+		array(
+			'type'              => 'integer',
+			'single'            => true,
+			'default'           => 0,
+			'show_in_rest'      => false,
+			'sanitize_callback' => 'absint',
+			'auth_callback'     => 'fuhao_block_meta_auth',
+		)
+	);
 }
 add_action( 'init', 'fuhao_register_block_meta', 20 );
 
@@ -112,8 +125,11 @@ function fuhao_render_block_fields_box( $post ) {
 	$text     = (string) get_post_meta( $post->ID, '_fuhao_block_text', true );
 	$btn_text = (string) get_post_meta( $post->ID, '_fuhao_block_btn_text', true );
 	$btn_url  = (string) get_post_meta( $post->ID, '_fuhao_block_btn_url', true );
+	$video_id = absint( get_post_meta( $post->ID, '_fuhao_block_video', true ) );
+	$video_file = $video_id ? get_attached_file( $video_id ) : '';
+	$video_name = $video_file ? wp_basename( $video_file ) : __( '未选择', 'fuhao' );
 	?>
-	<p class="description"><?php esc_html_e( '标题栏的名称只用于后台识别；前台显示下面填写的小标签和大标题。配图请用右侧“特色图片”。', 'fuhao' ); ?></p>
+	<p class="description"><?php esc_html_e( '标题栏的名称只用于后台识别；前台显示下面填写的小标签和大标题。图片或 GIF 请用右侧“特色图片”。', 'fuhao' ); ?></p>
 
 	<p>
 		<label for="fuhao_block_eyebrow"><strong><?php esc_html_e( '小标签', 'fuhao' ); ?></strong></label><br>
@@ -139,6 +155,15 @@ function fuhao_render_block_fields_box( $post ) {
 		<label for="fuhao_block_btn_url"><strong><?php esc_html_e( '按钮链接', 'fuhao' ); ?></strong></label><br>
 		<input type="url" class="widefat" name="fuhao_block_btn_url" id="fuhao_block_btn_url" value="<?php echo esc_attr( $btn_url ); ?>" placeholder="https://">
 	</p>
+
+	<p>
+		<strong><?php esc_html_e( '宣传视频（可选）', 'fuhao' ); ?></strong><br>
+		<input type="hidden" name="fuhao_block_video" id="fuhao_block_video" value="<?php echo esc_attr( $video_id ); ?>">
+		<button type="button" class="button" data-fuhao-media-select data-target="#fuhao_block_video" data-type="video" data-title="<?php esc_attr_e( '选择宣传视频', 'fuhao' ); ?>"><?php esc_html_e( '选择视频', 'fuhao' ); ?></button>
+		<button type="button" class="button" data-fuhao-media-remove data-target="#fuhao_block_video"><?php esc_html_e( '移除', 'fuhao' ); ?></button>
+		<span class="description" data-fuhao-media-name><?php echo esc_html( $video_name ); ?></span>
+	</p>
+	<p class="description"><?php esc_html_e( '视频留空则显示“特色图片”；填了视频时，特色图片作为视频封面。视频以点击播放方式显示，不自动播放声音。', 'fuhao' ); ?></p>
 	<?php
 }
 
@@ -172,6 +197,7 @@ function fuhao_save_block_fields( $post_id ) {
 		'_fuhao_block_text'     => array( 'fuhao_block_text', 'sanitize_textarea_field' ),
 		'_fuhao_block_btn_text' => array( 'fuhao_block_btn_text', 'sanitize_text_field' ),
 		'_fuhao_block_btn_url'  => array( 'fuhao_block_btn_url', 'esc_url_raw' ),
+		'_fuhao_block_video'    => array( 'fuhao_block_video', 'absint' ),
 	);
 
 	foreach ( $fields as $meta_key => $field ) {
@@ -180,9 +206,9 @@ function fuhao_save_block_fields( $post_id ) {
 		}
 
 		$value = call_user_func( $field[1], wp_unslash( $_POST[ $field[0] ] ) );
-		$value = is_string( $value ) ? trim( $value ) : '';
+		$value = is_string( $value ) ? trim( $value ) : $value;
 
-		if ( '' !== $value ) {
+		if ( '' !== $value && 0 !== $value ) {
 			update_post_meta( $post_id, $meta_key, $value );
 		} else {
 			delete_post_meta( $post_id, $meta_key );
@@ -190,3 +216,27 @@ function fuhao_save_block_fields( $post_id ) {
 	}
 }
 add_action( 'save_post_fuhao_block', 'fuhao_save_block_fields' );
+
+/**
+ * 宣传版块编辑页的媒体选择脚本。
+ */
+function fuhao_block_admin_assets() {
+	$screen = get_current_screen();
+
+	if ( ! $screen || 'fuhao_block' !== $screen->post_type ) {
+		return;
+	}
+
+	wp_enqueue_media();
+
+	$js_path = get_template_directory() . '/assets/js/admin-media.js';
+
+	wp_enqueue_script(
+		'fuhao-admin-media',
+		get_template_directory_uri() . '/assets/js/admin-media.js',
+		array( 'media-editor' ),
+		file_exists( $js_path ) ? filemtime( $js_path ) : FUHAO_VERSION,
+		true
+	);
+}
+add_action( 'admin_enqueue_scripts', 'fuhao_block_admin_assets' );

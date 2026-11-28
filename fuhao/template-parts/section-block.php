@@ -5,20 +5,23 @@
  * @package Fuhao
  */
 
-$fuhao_block_id   = isset( $args['post_id'] ) ? (int) $args['post_id'] : get_the_ID();
-$fuhao_block_tone = isset( $args['tone'] ) ? $args['tone'] : '';
-$fuhao_block_eyebrow  = (string) get_post_meta( $fuhao_block_id, '_fuhao_block_eyebrow', true );
-$fuhao_block_title    = (string) get_post_meta( $fuhao_block_id, '_fuhao_block_title', true );
-$fuhao_block_text     = (string) get_post_meta( $fuhao_block_id, '_fuhao_block_text', true );
-$fuhao_block_btn_text = (string) get_post_meta( $fuhao_block_id, '_fuhao_block_btn_text', true );
-$fuhao_block_btn_url  = (string) get_post_meta( $fuhao_block_id, '_fuhao_block_btn_url', true );
-$fuhao_block_image    = get_the_post_thumbnail_url( $fuhao_block_id, 'large' );
+$fuhao_block_id          = isset( $args['post_id'] ) ? (int) $args['post_id'] : get_the_ID();
+$fuhao_block_tone        = isset( $args['tone'] ) ? $args['tone'] : '';
+$fuhao_block_eyebrow     = (string) get_post_meta( $fuhao_block_id, '_fuhao_block_eyebrow', true );
+$fuhao_block_title       = (string) get_post_meta( $fuhao_block_id, '_fuhao_block_title', true );
+$fuhao_block_text        = (string) get_post_meta( $fuhao_block_id, '_fuhao_block_text', true );
+$fuhao_block_btn_text    = (string) get_post_meta( $fuhao_block_id, '_fuhao_block_btn_text', true );
+$fuhao_block_btn_url     = (string) get_post_meta( $fuhao_block_id, '_fuhao_block_btn_url', true );
+$fuhao_block_image       = get_the_post_thumbnail_url( $fuhao_block_id, 'large' );
+$fuhao_block_video       = fuhao_video_url( get_post_meta( $fuhao_block_id, '_fuhao_block_video', true ) );
+$fuhao_block_has_media   = $fuhao_block_image || $fuhao_block_video;
+$fuhao_block_has_content = $fuhao_block_eyebrow || $fuhao_block_title || $fuhao_block_text || ( $fuhao_block_btn_text && $fuhao_block_btn_url );
 
-if ( ! $fuhao_block_title && ! $fuhao_block_text && ! $fuhao_block_image ) {
+if ( ! $fuhao_block_has_content && ! $fuhao_block_has_media ) {
 	return;
 }
 ?>
-<section class="section block-section<?php echo 'paper' === $fuhao_block_tone ? ' section--paper' : ''; ?><?php echo $fuhao_block_image ? ' block-section--media' : ''; ?>" id="block-<?php echo esc_attr( $fuhao_block_id ); ?>">
+<section class="section block-section<?php echo 'paper' === $fuhao_block_tone ? ' section--paper' : ''; ?><?php echo $fuhao_block_has_media ? ' block-section--media' : ''; ?><?php echo $fuhao_block_has_media && ! $fuhao_block_has_content ? ' block-section--media-only' : ''; ?>" id="block-<?php echo esc_attr( $fuhao_block_id ); ?>">
 	<div class="container block-section__grid">
 		<div class="block-section__content reveal">
 			<?php if ( $fuhao_block_eyebrow ) : ?>
@@ -40,9 +43,16 @@ if ( ! $fuhao_block_title && ! $fuhao_block_text && ! $fuhao_block_image ) {
 			<?php endif; ?>
 		</div>
 
-		<?php if ( $fuhao_block_image ) : ?>
+		<?php if ( $fuhao_block_has_media ) : ?>
 			<div class="block-section__media reveal">
-				<img src="<?php echo esc_url( $fuhao_block_image ); ?>" alt="<?php echo esc_attr( $fuhao_block_title ? $fuhao_block_title : get_the_title( $fuhao_block_id ) ); ?>" loading="lazy">
+				<?php if ( $fuhao_block_video ) : ?>
+					<video controls playsinline preload="metadata"<?php echo $fuhao_block_image ? ' poster="' . esc_url( $fuhao_block_image ) . '"' : ''; ?>>
+						<source src="<?php echo esc_url( $fuhao_block_video ); ?>">
+						<?php esc_html_e( '您的浏览器不支持视频播放。', 'fuhao' ); ?>
+					</video>
+				<?php else : ?>
+					<img src="<?php echo esc_url( $fuhao_block_image ); ?>" alt="<?php echo esc_attr( $fuhao_block_title ? $fuhao_block_title : get_the_title( $fuhao_block_id ) ); ?>" loading="lazy">
+				<?php endif; ?>
 			</div>
 		<?php endif; ?>
 	</div>

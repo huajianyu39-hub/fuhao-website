@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'FUHAO_VERSION', '0.3.8' );
+define( 'FUHAO_VERSION', '0.3.12.2' );
 
 require get_template_directory() . '/inc/template-tags.php';
 require get_template_directory() . '/inc/icons.php';

@@ -12,7 +12,17 @@ while ( have_posts() ) :
 
 	$fuhao_sub = has_excerpt()
 		? get_the_excerpt()
-		: __( '工厂拥有 26+ 年箱包制造经验与 6 个生产厂区，覆盖裁剪、车缝、组装与包装环节，成品日产能 3–5 万件。', 'fuhao' );
+		: __( '工厂拥有 20+ 年箱包制造经验与 6 个生产厂区，覆盖裁剪、车缝、组装与包装环节，成品日产能 3–5 万件。', 'fuhao' );
+
+	$fuhao_factory_video_id     = absint( fuhao_get( 'factory_video' ) );
+	$fuhao_factory_video        = fuhao_video_url( $fuhao_factory_video_id );
+	$fuhao_factory_video_poster = fuhao_get( 'factory_video_poster' );
+	$fuhao_factory_video_title  = fuhao_get( 'factory_video_title' );
+	$fuhao_factory_video_text   = fuhao_get( 'factory_video_text' );
+
+	if ( '' === $fuhao_factory_video_title ) {
+		$fuhao_factory_video_title = __( '走进工厂', 'fuhao' );
+	}
 
 	get_template_part(
 		'template-parts/page-hero',
@@ -27,8 +37,8 @@ while ( have_posts() ) :
 	<section class="stat-band">
 		<div class="container stat-band__grid">
 			<div class="stat-band__item">
-				<strong>26+</strong>
-				<span><?php esc_html_e( '年工厂箱包制造经验', 'fuhao' ); ?></span>
+				<strong>20+ 年</strong>
+				<span><?php esc_html_e( '工厂箱包制造经验', 'fuhao' ); ?></span>
 			</div>
 			<div class="stat-band__item">
 				<strong>6 个</strong>
@@ -44,6 +54,27 @@ while ( have_posts() ) :
 			</div>
 		</div>
 	</section>
+
+	<?php if ( $fuhao_factory_video ) : ?>
+		<section class="section factory-video">
+			<div class="container">
+				<div class="section-head section-head--center reveal">
+					<p class="eyebrow"><?php esc_html_e( '工厂视频', 'fuhao' ); ?></p>
+					<h2><?php echo esc_html( $fuhao_factory_video_title ); ?></h2>
+					<?php if ( $fuhao_factory_video_text ) : ?>
+						<p class="section-head__text"><?php echo esc_html( $fuhao_factory_video_text ); ?></p>
+					<?php endif; ?>
+				</div>
+
+				<div class="factory-video__frame reveal">
+					<video controls playsinline preload="metadata"<?php echo $fuhao_factory_video_poster ? ' poster="' . esc_url( $fuhao_factory_video_poster ) . '"' : ''; ?>>
+						<source src="<?php echo esc_url( $fuhao_factory_video ); ?>">
+						<?php esc_html_e( '您的浏览器不支持视频播放。', 'fuhao' ); ?>
+					</video>
+				</div>
+			</div>
+		</section>
+	<?php endif; ?>
 
 	<?php
 	if ( '' !== trim( wp_strip_all_tags( get_the_content() ) ) ) :
@@ -64,7 +95,7 @@ while ( have_posts() ) :
 				<div class="split__content">
 					<p class="eyebrow"><?php esc_html_e( '公司与工厂', 'fuhao' ); ?></p>
 					<h2><?php esc_html_e( '公司负责销售与服务，工厂负责生产', 'fuhao' ); ?></h2>
-					<p><?php esc_html_e( '上饶市豪富箱包有限公司专注箱包产品销售、客户服务与订单对接，生产由自有箱包工厂完成。', 'fuhao' ); ?></p>
+					<p><?php esc_html_e( '上饶市富豪箱包有限公司专注箱包产品销售、客户服务与订单对接，生产由自有箱包工厂完成。', 'fuhao' ); ?></p>
 					<p><?php esc_html_e( '工厂覆盖裁剪、车缝、组装与包装环节，支持现货、现货定制与批量订单。', 'fuhao' ); ?></p>
 
 					<ul class="check-list">

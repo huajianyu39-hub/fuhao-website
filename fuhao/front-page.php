@@ -12,7 +12,11 @@ $fuhao_hidden  = fuhao_home_hidden();
 $fuhao_light   = 0;
 ?>
 <main id="main">
+	<h1 class="screen-reader-text"><?php echo esc_html( get_bloginfo( 'name' ) . '｜' . __( '收纳、背包与旅行包制造定制', 'fuhao' ) ); ?></h1>
+
 	<?php get_template_part( 'template-parts/section-hero' ); ?>
+
+	<?php get_template_part( 'template-parts/section-stats' ); ?>
 
 	<?php foreach ( $fuhao_order as $fuhao_token ) : ?>
 		<?php

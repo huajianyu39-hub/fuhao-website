@@ -28,7 +28,7 @@ $fuhao_about_points = array_filter(
 			<?php endif; ?>
 			<div class="about__badge">
 				<strong><?php echo esc_html( fuhao_get( 'stat1_number' ) ); ?></strong>
-				<span>年工厂制造经验</span>
+				<span>工厂制造经验</span>
 			</div>
 		</div>
 

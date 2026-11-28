@@ -22,8 +22,8 @@ function fuhao_abilities_register_category() {
 	wp_register_ability_category(
 		'fuhao',
 		array(
-			'label'       => '豪富站点',
-			'description' => '豪富箱包官网的页面、产品、分类、媒体、菜单、站点设置与主题选项操作。',
+			'label'       => '富豪站点',
+			'description' => '富豪箱包官网的页面、产品、分类、媒体、菜单、站点设置与主题选项操作。',
 		)
 	);
 }
